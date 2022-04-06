@@ -24,7 +24,7 @@ public class SkipCommand implements IButtonCommand {
 
         if (audioPlayer.getPlayingTrack() == null)
             return;
-        if (!Objects.equals(musicManager.link.getChannel(), ctx.getMember().getVoiceState().getChannel().getId()))
+        if (!VoiceChecks.inChannelWith(musicManager, ctx.getMember()))
             return;
 
         if (audioPlayer.getPlayingTrack() != null && musicManager.scheduler.queue.size() == 0){
