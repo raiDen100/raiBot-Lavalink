@@ -1,18 +1,23 @@
-package com.raiden.commands.utils.player;
+package com.raiden.utils.player;
 
-import com.raiden.LavalinkHandler;
+import com.raiden.commands.utils.EmbedCreator;
+import com.raiden.utils.Config;
+import com.raiden.utils.LavalinkHandler;
 import com.raiden.commands.utils.CommandContext;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeHttpContextFilter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -35,17 +40,45 @@ public class PlayerManager extends DefaultAudioPlayerManager {
 
             @Override
             public void trackLoaded(AudioTrack track) {
-                log.info("Track loaded: " + track.getInfo().title);
+
+                track.setUserData(author);
+                if (musicManager.audioPlayer.getPlayingTrack() != null){
+                    MessageEmbed messageEmbed = EmbedCreator.queuedTrackEmbed(track, author.getIdLong());
+                    musicManager.messageManager.sendQueueMessage(messageEmbed);
+                }
+
                 scheduler.queueTrack(track);
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                AudioTrack track = audioPlaylist.getTracks().stream()
-                        .findFirst()
-                        .orElseThrow();
-                log.info(track.getInfo().title);
-                scheduler.queueTrack(track);
+
+                if (audioPlaylist.isSearchResult()){
+
+                    AudioTrack track = audioPlaylist.getTracks().stream()
+                            .findFirst()
+                            .orElseThrow();
+
+                    if (musicManager.audioPlayer.getPlayingTrack() != null ){
+
+                        MessageEmbed messageEmbed = EmbedCreator.queuedTrackEmbed(track, author.getIdLong());
+                        musicManager.messageManager.sendQueueMessage(messageEmbed);
+                    }
+
+                    track.setUserData(author);
+                    scheduler.queueTrack(track);
+                    return;
+                }
+
+                List<AudioTrack> tracks = audioPlaylist.getTracks();
+
+                MessageEmbed messageEmbed = EmbedCreator.queuedPlaylistEmbed(tracks.size());
+                musicManager.messageManager.sendQueueMessage(messageEmbed);
+
+                for(AudioTrack track : tracks){
+                    track.setUserData(author);
+                    scheduler.queueTrack(track);
+                }
             }
 
             @Override

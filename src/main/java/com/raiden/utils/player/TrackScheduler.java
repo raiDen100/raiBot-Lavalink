@@ -1,9 +1,13 @@
-package com.raiden.commands.utils.player;
+package com.raiden.utils.player;
 
+import com.raiden.commands.utils.EmbedCreator;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lavalink.client.player.IPlayer;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -13,9 +17,15 @@ public class TrackScheduler extends AudioEventListener {
 
     public final BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
     public IPlayer player;
+    private final Guild guild;
 
-    public TrackScheduler(IPlayer player){
+    public boolean loop = false;
+    public boolean loopQueue = false;
+
+
+    public TrackScheduler(IPlayer player, Guild guild){
         this.player = player;
+        this.guild = guild;
     }
 
     public void queueTrack(AudioTrack track){
@@ -33,13 +43,24 @@ public class TrackScheduler extends AudioEventListener {
 
     @Override
     public void onTrackStart(IPlayer player, AudioTrack track) {
-        log.info("Starting track: " + track.getInfo().title);
+
+        MessageEmbed messageEmbed = EmbedCreator.nowPlayingEmbed(track, ((User)track.getUserData()).getIdLong());
+        PlayerManager.getInstance().getMusicManager(guild).messageManager.sendNowPlayingMessage(messageEmbed);
     }
 
     @Override
     public void onTrackEnd(IPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        PlayerManager.getInstance().getMusicManager(guild).messageManager.removeLastPlayingMessage();
         if (endReason.mayStartNext){
-            nextTrack();
+            if (loop){
+                player.playTrack(track.makeClone());
+                return;
+            }
+            if (loopQueue){
+                queueTrack(track.makeClone());
+            }
+            if (queue.size() > 0)
+                nextTrack();
         }
     }
 
@@ -50,6 +71,6 @@ public class TrackScheduler extends AudioEventListener {
 
     @Override
     public void onTrackException(IPlayer player, AudioTrack track, Exception exception) {
-        super.onTrackException(player, track, exception);
+        log.info(exception.getMessage());
     }
 }

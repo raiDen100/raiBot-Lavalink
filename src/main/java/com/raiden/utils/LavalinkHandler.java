@@ -1,5 +1,6 @@
-package com.raiden;
+package com.raiden.utils;
 
+import com.raiden.Bot;
 import lavalink.client.io.jda.JdaLavalink;
 
 public class LavalinkHandler {

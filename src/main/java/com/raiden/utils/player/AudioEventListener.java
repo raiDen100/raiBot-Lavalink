@@ -1,4 +1,4 @@
-package com.raiden.commands.utils.player;
+package com.raiden.utils.player;
 
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
