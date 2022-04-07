@@ -1,6 +1,7 @@
 package com.raiden.commands.utils;
 
 import com.raiden.commands.PingCommand;
+import com.raiden.commands.ResetCommand;
 import com.raiden.commands.music.*;
 import com.raiden.commands.music.filters.BassboostCommand;
 import com.raiden.commands.utils.exceptions.CommandNotFoundException;
@@ -25,7 +26,8 @@ public class CommandManager {
             new ShuffleCommand(),
             new QueueCommand(),
             new LeaveCommand(),
-            new ClearCommand()
+            new ClearCommand(),
+            new ResetCommand()
     );
 
     public void handle(GuildMessageReceivedEvent event){

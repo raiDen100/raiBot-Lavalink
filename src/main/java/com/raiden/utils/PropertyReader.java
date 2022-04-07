@@ -13,7 +13,7 @@ public class PropertyReader {
 
             Properties properties = new Properties();
 
-            InputStream inputStream = getClass().getResourceAsStream("/config.properties");
+            InputStream inputStream = getClass().getResourceAsStream("/configs/" + System.getProperty("active.profile") + "/config.properties");
             properties.load(inputStream);
 
             return properties.getProperty(propertyName);

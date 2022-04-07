@@ -49,5 +49,6 @@ public class GuildMusicManager {
     }
 
     public void resetFilters() {
+        resetBassboost();
     }
 }

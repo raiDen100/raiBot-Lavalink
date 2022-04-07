@@ -1,4 +1,4 @@
-package com.raiden.commands.music.filters;
+package com.raiden.commands;
 
 import com.raiden.commands.utils.CommandContext;
 import com.raiden.commands.utils.ICommand;
@@ -7,12 +7,11 @@ import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
 import com.raiden.utils.player.VoiceChecks;
 import lavalink.client.player.IPlayer;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
 
-public class BassboostCommand implements ICommand {
+public class ResetCommand implements ICommand {
     @Override
     public void handle(CommandContext ctx) {
         TextChannel channel = ctx.getChannel();
@@ -20,34 +19,23 @@ public class BassboostCommand implements ICommand {
         GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
         IPlayer audioPlayer = musicManager.audioPlayer;
 
+        if (audioPlayer.getPlayingTrack() == null)
+            return;
         if (!VoiceChecks.inChannelWith(musicManager, ctx.getMember()))
             return;
 
-        if(ctx.getArgs().size() < 2)
-            return;
-
-        if (ctx.getArgs().get(1).equals("reset")){
-            musicManager.resetBassboost();
-
-            channel.sendMessageEmbeds(EmbedCreator.actionSuccessfulEmbed("Bassboost reset!")).queue();
-            return;
-        }
-
-        float bassboostValue = Float.parseFloat(ctx.getArgs().get(1)) / 100;
-
-        musicManager.setBassboost(bassboostValue);
-
-        channel.sendMessageEmbeds(EmbedCreator.actionSuccessfulEmbed("Bassboost " + Math.round(bassboostValue * 100) + " set!")).queue();
+        musicManager.resetFilters();
+        channel.sendMessageEmbeds(EmbedCreator.actionSuccessfulEmbed("Filters reset!")).queue();
     }
 
     @Override
     public String getName() {
-        return "bassboost";
+        return "reset";
     }
 
     @Override
     public List<String> getAliases() {
-        return List.of("bb");
+        return ICommand.super.getAliases();
     }
 
     @Override

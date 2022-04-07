@@ -2,11 +2,13 @@ package com.raiden.commands.music;
 
 import com.raiden.commands.utils.*;
 import com.raiden.commands.utils.exceptions.VoiceChannelNullException;
+import com.raiden.utils.messages.EmbedCreator;
 import com.raiden.utils.player.*;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import lavalink.client.io.jda.JdaLink;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
@@ -49,6 +51,7 @@ public class PlayCommand implements ICommand {
         if (!isValid(track) && !isSpotifyUrl(track))
             track = "ytsearch:" + track;
 
+        musicManager.setChannel(channel);
         if (isSpotifyUrl(track)){
             List<String> splitted = Arrays.asList(track.split("/"));
             Collections.reverse(splitted);
@@ -56,14 +59,30 @@ public class PlayCommand implements ICommand {
             String type = splitted.get(1);
             if (type.equals("track")){
                 Track spotifyTrack = spotifyService.getTrackDetailsById(id);
-                track = spotifyTrack.getName() + " " + getTrackArtists(spotifyTrack);
+                track = "ytsearch:" + spotifyTrack.getName() + " " + getTrackArtists(spotifyTrack);
             }
             else if (type.equals("playlist")){
                 List<Track> tracks = spotifyService.getPlaylistTracks(id);
 
-                musicManager.setChannel(channel);
+                MessageEmbed messageEmbed = EmbedCreator.queuedPlaylistEmbed(tracks.size());
+                channel.sendMessageEmbeds(messageEmbed).queue();
+
                 for (Track t : tracks){
-                    SpotifyAudioTrack spotifyAudioTrack = new SpotifyAudioTrack(new AudioTrackInfo(t.getName() + " " + getTrackArtists(t), getTrackArtists(t),t.getDurationMs(), t.getId(), false, ""));
+                    SpotifyAudioTrack spotifyAudioTrack = new SpotifyAudioTrack(new AudioTrackInfo(t.getName() + " - " + getTrackArtists(t), getTrackArtists(t),t.getDurationMs(), t.getId(), false, ""));
+                    spotifyAudioTrack.setUserData(ctx.getAuthor());
+                    musicManager.scheduler.queueTrack(spotifyAudioTrack);
+                }
+                return;
+            }
+            else if (type.equals("album")){
+                List<TrackSimplified> tracks = spotifyService.getAlbumTracks(id);
+
+                MessageEmbed messageEmbed = EmbedCreator.queuedPlaylistEmbed(tracks.size());
+                channel.sendMessageEmbeds(messageEmbed).queue();
+
+                int i = 0;
+                for (TrackSimplified t : tracks) {
+                    SpotifyAudioTrack spotifyAudioTrack = new SpotifyAudioTrack(new AudioTrackInfo(t.getName() + " - " + getTrackArtists(t), getTrackArtists(t),t.getDurationMs(), t.getId(), false, ""));
                     spotifyAudioTrack.setUserData(ctx.getAuthor());
                     musicManager.scheduler.queueTrack(spotifyAudioTrack);
                 }
