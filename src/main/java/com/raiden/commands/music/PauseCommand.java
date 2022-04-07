@@ -2,11 +2,10 @@ package com.raiden.commands.music;
 
 import com.raiden.commands.utils.CommandContext;
 import com.raiden.commands.utils.IButtonCommand;
-import com.raiden.commands.utils.VoiceChecks;
+import com.raiden.utils.player.VoiceChecks;
 import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
 import lavalink.client.player.IPlayer;
-import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 

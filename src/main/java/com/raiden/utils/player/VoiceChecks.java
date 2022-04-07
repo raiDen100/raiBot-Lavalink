@@ -1,4 +1,4 @@
-package com.raiden.commands.utils;
+package com.raiden.utils.player;
 
 import com.raiden.utils.player.GuildMusicManager;
 import net.dv8tion.jda.api.entities.Member;

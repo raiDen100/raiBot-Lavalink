@@ -1,6 +1,6 @@
 package com.raiden.utils.player;
 
-import com.raiden.commands.utils.EmbedCreator;
+import com.raiden.utils.messages.EmbedCreator;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lavalink.client.player.IPlayer;

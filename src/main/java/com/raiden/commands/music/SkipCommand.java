@@ -3,15 +3,14 @@ package com.raiden.commands.music;
 import com.raiden.commands.utils.*;
 import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
+import com.raiden.utils.player.VoiceChecks;
 import lavalink.client.player.IPlayer;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.interactions.components.Button;
 
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 public class SkipCommand implements IButtonCommand {

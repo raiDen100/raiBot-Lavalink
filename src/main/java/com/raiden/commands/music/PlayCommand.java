@@ -1,13 +1,10 @@
 package com.raiden.commands.music;
 
-import com.raiden.utils.LavalinkHandler;
 import com.raiden.commands.utils.*;
 import com.raiden.commands.utils.exceptions.VoiceChannelNullException;
 import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import lavalink.client.io.jda.JdaLavalink;
+import com.raiden.utils.player.VoiceChecks;
 import lavalink.client.io.jda.JdaLink;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
@@ -16,7 +13,6 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j

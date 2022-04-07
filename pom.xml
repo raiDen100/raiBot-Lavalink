@@ -36,9 +36,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.freyacodes</groupId>
+            <groupId>com.github.raiDen100</groupId>
             <artifactId>Lavalink-Client</artifactId>
-            <version>4.0</version>
+            <version>master-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.raiDen100</groupId>

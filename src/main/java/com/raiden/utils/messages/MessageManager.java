@@ -1,4 +1,4 @@
-package com.raiden.commands.utils;
+package com.raiden.utils.messages;
 
 import com.raiden.utils.player.TrackScheduler;
 import net.dv8tion.jda.api.entities.Message;
@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 
-import javax.sound.midi.Track;
 import java.util.List;
 
 public class MessageManager {

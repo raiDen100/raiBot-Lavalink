@@ -1,4 +1,4 @@
-package com.raiden.commands.utils;
+package com.raiden.utils.messages;
 
 import com.raiden.utils.player.TrackScheduler;
 import net.dv8tion.jda.api.interactions.components.Button;

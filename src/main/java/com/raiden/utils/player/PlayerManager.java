@@ -1,13 +1,11 @@
 package com.raiden.utils.player;
 
-import com.raiden.commands.utils.EmbedCreator;
-import com.raiden.utils.Config;
+import com.raiden.utils.messages.EmbedCreator;
 import com.raiden.utils.LavalinkHandler;
 import com.raiden.commands.utils.CommandContext;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeHttpContextFilter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -34,62 +32,7 @@ public class PlayerManager extends DefaultAudioPlayerManager {
 
     public void loadAndPlay(CommandContext ctx, String trackUrl, User author){
         GuildMusicManager musicManager = getMusicManager(ctx.getGuild());
-        TrackScheduler scheduler = musicManager.scheduler;
-        audioPlayerManager.loadItem(trackUrl, new AudioLoadResultHandler() {
-
-
-            @Override
-            public void trackLoaded(AudioTrack track) {
-
-                track.setUserData(author);
-                if (musicManager.audioPlayer.getPlayingTrack() != null){
-                    MessageEmbed messageEmbed = EmbedCreator.queuedTrackEmbed(track, author.getIdLong());
-                    musicManager.messageManager.sendQueueMessage(messageEmbed);
-                }
-
-                scheduler.queueTrack(track);
-            }
-
-            @Override
-            public void playlistLoaded(AudioPlaylist audioPlaylist) {
-
-                if (audioPlaylist.isSearchResult()){
-
-                    AudioTrack track = audioPlaylist.getTracks().stream()
-                            .findFirst()
-                            .orElseThrow();
-
-                    if (musicManager.audioPlayer.getPlayingTrack() != null ){
-
-                        MessageEmbed messageEmbed = EmbedCreator.queuedTrackEmbed(track, author.getIdLong());
-                        musicManager.messageManager.sendQueueMessage(messageEmbed);
-                    }
-
-                    track.setUserData(author);
-                    scheduler.queueTrack(track);
-                    return;
-                }
-
-                List<AudioTrack> tracks = audioPlaylist.getTracks();
-
-                MessageEmbed messageEmbed = EmbedCreator.queuedPlaylistEmbed(tracks.size());
-                musicManager.messageManager.sendQueueMessage(messageEmbed);
-
-                for(AudioTrack track : tracks){
-                    track.setUserData(author);
-                    scheduler.queueTrack(track);
-                }
-            }
-
-            @Override
-            public void noMatches() {
-            }
-
-            @Override
-            public void loadFailed(FriendlyException e) {
-                log.info(e.getMessage());
-            }
-        });
+        audioPlayerManager.loadItem(trackUrl, new DefaultAudioResultHandler(author, musicManager));
     }
 
     public GuildMusicManager getMusicManager(Guild guild){
