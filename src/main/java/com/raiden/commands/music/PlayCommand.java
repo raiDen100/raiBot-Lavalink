@@ -46,7 +46,7 @@ public class PlayCommand implements ICommand {
 
         String track = String.join(" ", ctx.getArgs().subList(1, ctx.getArgs().size())).trim();
 
-        if (!isSpotifyUrl(track))
+        if (!isValid(track) && !isSpotifyUrl(track))
             track = "ytsearch:" + track;
 
         if (isSpotifyUrl(track)){

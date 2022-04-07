@@ -15,11 +15,13 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class TrackScheduler extends AudioEventListener {
 
-    public BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
+    public List<AudioTrack> queue = new ArrayList<>();
+    private BlockingQueue<AudioTrack> preloadQueue = new LinkedBlockingQueue<>();
     public IPlayer player;
     private final Guild guild;
 
@@ -40,23 +42,32 @@ public class TrackScheduler extends AudioEventListener {
             player.playTrack(track);
             return;
         }
-        queue.offer(track);
+        queue.add(track);
     }
 
     public void nextTrack(){
-        AudioTrack track = this.queue.poll();
+        AudioTrack track = this.queue.get(0);
+        queue.remove(0);
         if (track instanceof SpotifyAudioTrack){
             track = convertSpotifyTrack(track);
         }
+        List<AudioTrack> tracksToPreload = queue.stream()
+                .filter(t -> t instanceof SpotifyAudioTrack && !preloadQueue.contains(t))
+                .limit(3)
+                .collect(Collectors.toList());
+        preloadQueue.addAll(tracksToPreload);
+
+        new Thread(){
+            public void run(){
+                preloadSpotifyTracks();
+            }
+        }.start();
+
         this.player.playTrack(track);
     }
 
     public void shuffleQueue() {
-        List<AudioTrack> queueTracks = new ArrayList<>();
-        queue.drainTo(queueTracks);
-        Collections.shuffle(queueTracks);
-
-        queue.addAll(queueTracks);
+        Collections.shuffle(queue);
     }
 
     @Override
@@ -92,10 +103,24 @@ public class TrackScheduler extends AudioEventListener {
         log.info(exception.getMessage());
     }
 
+    synchronized private void preloadSpotifyTracks(){
+        for (int i = 0; i < preloadQueue.size(); i++) {
+            AudioTrack spotifyTrack = preloadQueue.poll();
+            AudioTrack converted = convertSpotifyTrack(spotifyTrack);
+            for (int y = 0; y < queue.size(); y++) {
+                if (spotifyTrack == queue.get(y)){
+                    queue.set(y, converted);
+                    break;
+                }
+            }
+        }
+    }
+
     private AudioTrack convertSpotifyTrack(AudioTrack track){
         try {
             List<AudioTrack> searchPlaylist = PlayerManager.getInstance().getMusicManager(guild).link.getRestClient().getYoutubeSearchResult(track.getInfo().title).get();
             AudioTrack ytTrack = searchPlaylist.get(0);
+            log.info("Converting: " + ytTrack.getInfo().title);
             ytTrack.setUserData(track.getUserData());
             return ytTrack;
         }catch(Exception e){
