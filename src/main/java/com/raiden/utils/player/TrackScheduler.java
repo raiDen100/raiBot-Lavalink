@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class TrackScheduler extends AudioEventListener {
@@ -33,6 +34,9 @@ public class TrackScheduler extends AudioEventListener {
 
     public void queueTrack(AudioTrack track){
         if(player.getPlayingTrack() == null){
+            if (track instanceof SpotifyAudioTrack){
+                track = convertSpotifyTrack(track);
+            }
             player.playTrack(track);
             return;
         }
@@ -41,6 +45,9 @@ public class TrackScheduler extends AudioEventListener {
 
     public void nextTrack(){
         AudioTrack track = this.queue.poll();
+        if (track instanceof SpotifyAudioTrack){
+            track = convertSpotifyTrack(track);
+        }
         this.player.playTrack(track);
     }
 
@@ -83,5 +90,17 @@ public class TrackScheduler extends AudioEventListener {
     @Override
     public void onTrackException(IPlayer player, AudioTrack track, Exception exception) {
         log.info(exception.getMessage());
+    }
+
+    private AudioTrack convertSpotifyTrack(AudioTrack track){
+        try {
+            List<AudioTrack> searchPlaylist = PlayerManager.getInstance().getMusicManager(guild).link.getRestClient().getYoutubeSearchResult(track.getInfo().title).get();
+            AudioTrack ytTrack = searchPlaylist.get(0);
+            ytTrack.setUserData(track.getUserData());
+            return ytTrack;
+        }catch(Exception e){
+
+        }
+        return null;
     }
 }

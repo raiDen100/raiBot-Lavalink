@@ -18,4 +18,14 @@ public class Config {
     public static String getNodePassword(){
         return propertyReader.getPropertyValue("node.password");
     }
+
+    public static String getSpotifySecret(){
+        return propertyReader.getPropertyValue("spotify.client.secret");
+    }
+    public static String getSpotifyId(){
+        return propertyReader.getPropertyValue("spotify.client.id");
+    }
+    public static String getSpotifyRedirect(){
+        return propertyReader.getPropertyValue("spotify.redirect");
+    }
 }
