@@ -48,6 +48,6 @@ public class Listener extends ListenerAdapter {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        lavalink.addNode(nodeUri, "pass");
+        lavalink.addNode(nodeUri, Config.getNodePassword());
     }
 }
