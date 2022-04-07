@@ -25,4 +25,15 @@ public class ButtonCreator {
 
         return buttonList;
     }
+
+    public static List<Button> createQueueButtons(){
+        List<Button> buttonList = new ArrayList<>();
+
+        buttonList.add(Button.secondary("queue first", "First"));
+        buttonList.add(Button.secondary("queue previous", "Previous"));
+        buttonList.add(Button.secondary("queue next", "Next"));
+        buttonList.add(Button.secondary("queue last", "Last"));
+
+        return buttonList;
+    }
 }

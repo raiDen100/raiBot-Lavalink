@@ -20,7 +20,12 @@ public class CommandManager {
             new LoopCommand(),
             new PauseCommand(),
             new ResumeCommand(),
-            new BassboostCommand()
+            new BassboostCommand(),
+            new LoopQueueCommand(),
+            new ShuffleCommand(),
+            new QueueCommand(),
+            new LeaveCommand(),
+            new ClearCommand()
     );
 
     public void handle(GuildMessageReceivedEvent event){

@@ -15,6 +15,10 @@ public class MessageManager {
     private Message lastNowPlaying;
     private TrackScheduler scheduler;
 
+    private Message lastQueueMessage;
+
+    public int queuePage = 0;
+
 
     public void setChannel(TextChannel channel) {
         this.channel = channel;
@@ -27,6 +31,17 @@ public class MessageManager {
         List<Button> buttons = ButtonCreator.createNowPlayingButtons(scheduler);
 
         channel.sendMessageEmbeds(messageEmbed).setActionRow(buttons).queue(message -> lastNowPlaying = message);
+    }
+
+    public void sendQueueMessage(String messageContent){
+        List<Button> buttons = ButtonCreator.createQueueButtons();
+
+        queuePage = 0;
+        channel.sendMessage(messageContent).setActionRow(buttons).queue(message -> lastQueueMessage = message);
+    }
+
+    public void updateButtonsQueueButtons(ButtonClickEvent buttonEvent, String messageContent){
+        buttonEvent.editMessage(messageContent).queue();
     }
 
     public void updateButtonsNowPlayingEmbed(ButtonClickEvent buttonEvent){

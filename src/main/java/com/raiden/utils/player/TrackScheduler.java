@@ -9,13 +9,16 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 public class TrackScheduler extends AudioEventListener {
 
-    public final BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
+    public BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
     public IPlayer player;
     private final Guild guild;
 
@@ -39,6 +42,14 @@ public class TrackScheduler extends AudioEventListener {
     public void nextTrack(){
         AudioTrack track = this.queue.poll();
         this.player.playTrack(track);
+    }
+
+    public void shuffleQueue() {
+        List<AudioTrack> queueTracks = new ArrayList<>();
+        queue.drainTo(queueTracks);
+        Collections.shuffle(queueTracks);
+
+        queue.addAll(queueTracks);
     }
 
     @Override

@@ -47,4 +47,7 @@ public class GuildMusicManager {
     public void setChannel(TextChannel channel) {
         messageManager.setChannel(channel);
     }
+
+    public void resetFilters() {
+    }
 }

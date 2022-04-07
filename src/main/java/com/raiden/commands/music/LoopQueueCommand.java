@@ -1,4 +1,4 @@
-package com.raiden.commands.music.filters;
+package com.raiden.commands.music;
 
 import com.raiden.commands.utils.CommandContext;
 import com.raiden.commands.utils.ICommand;
@@ -7,47 +7,44 @@ import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
 import com.raiden.utils.player.VoiceChecks;
 import lavalink.client.player.IPlayer;
-import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
 
-public class BassboostCommand implements ICommand {
+public class LoopQueueCommand implements ICommand {
     @Override
     public void handle(CommandContext ctx) {
         TextChannel channel = ctx.getChannel();
 
         GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
-        IPlayer audioPlayer = musicManager.audioPlayer;
 
         if (!VoiceChecks.inChannelWith(musicManager, ctx.getMember()))
             return;
 
-        if(ctx.getArgs().size() < 2)
-            return;
+        musicManager.scheduler.loopQueue = !musicManager.scheduler.loopQueue;
+        musicManager.scheduler.loop = false;
 
-        if (ctx.getArgs().get(1).equals("reset")){
-            musicManager.resetBassboost();
+        musicManager.messageManager.updateButtonsNowPlayingEmbed();
 
-            channel.sendMessageEmbeds(EmbedCreator.actionSuccessfulEmbed("Bassboost reset!")).queue();
-            return;
+        if (musicManager.scheduler.loopQueue){
+            MessageEmbed messageEmbed = EmbedCreator.actionSuccessfulEmbed("Looping queue!");
+            channel.sendMessageEmbeds(messageEmbed).queue();
         }
-
-        float bassboostValue = Float.parseFloat(ctx.getArgs().get(1)) / 100;
-
-        musicManager.setBassboost(bassboostValue);
-
-        channel.sendMessageEmbeds(EmbedCreator.actionSuccessfulEmbed("Bassboost " + Math.round(bassboostValue) + " set!")).queue();
+        else{
+            MessageEmbed messageEmbed = EmbedCreator.actionSuccessfulEmbed("Queue loop disabled");
+            channel.sendMessageEmbeds(messageEmbed).queue();
+        }
     }
 
     @Override
     public String getName() {
-        return "bassboost";
+        return "loopqueue";
     }
 
     @Override
     public List<String> getAliases() {
-        return List.of("bb");
+        return List.of("loopq", "lq");
     }
 
     @Override

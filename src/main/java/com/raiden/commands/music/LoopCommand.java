@@ -25,6 +25,7 @@ public class LoopCommand implements IButtonCommand {
             return;
 
         musicManager.scheduler.loop = !musicManager.scheduler.loop;
+        musicManager.scheduler.loopQueue = false;
 
         musicManager.messageManager.updateButtonsNowPlayingEmbed();
 
