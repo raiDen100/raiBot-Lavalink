@@ -29,7 +29,6 @@ public class Listener extends ListenerAdapter {
         if (user.isBot() || !message.startsWith(prefix))
             return;
 
-        log.info(event.getMessage().getContentRaw());
         commandManager.handle(event);
     }
 

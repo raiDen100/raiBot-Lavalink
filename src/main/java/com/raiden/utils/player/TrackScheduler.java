@@ -86,7 +86,7 @@ public class TrackScheduler extends AudioEventListener {
                 return;
             }
             if (loopQueue){
-                queueTrack(track.makeClone());
+                queue.add(track.makeClone());
             }
             if (queue.size() > 0)
                 nextTrack();

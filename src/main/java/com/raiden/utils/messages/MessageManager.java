@@ -1,6 +1,7 @@
 package com.raiden.utils.messages;
 
 import com.raiden.utils.player.TrackScheduler;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.interactions.components.Button;
 
 import java.util.List;
 
+@Slf4j
 public class MessageManager {
     private TextChannel channel;
 
