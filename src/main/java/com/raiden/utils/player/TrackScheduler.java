@@ -37,46 +37,40 @@ public class TrackScheduler extends AudioEventListener {
     public boolean loop = false;
     public boolean loopQueue = false;
 
+    private final AudioTrackConverter audioTrackConverter;
+
 
     public TrackScheduler(IPlayer player, Guild guild){
         this.player = player;
         this.guild = guild;
+        this.audioTrackConverter = new AudioTrackConverter(guild);
     }
 
     public void queueTrack(AudioTrack track){
         if(player.getPlayingTrack() == null){
             if (track instanceof SpotifyAudioTrack){
-                track = convertSpotifyTrack(track);
+                track = audioTrackConverter.convertSpotifyTrack(track);
             }
             player.playTrack(track);
             return;
         }
         queue.add(track);
+        audioTrackConverter.convertQueue(queue);
     }
 
     public void queueTracks(List<AudioTrack> tracks) {
         for (AudioTrack t: tracks){
             queueTrack(t);
         }
+        audioTrackConverter.convertQueue(queue);
     }
 
     public void nextTrack(){
         AudioTrack track = this.queue.get(0);
         queue.remove(0);
         if (track instanceof SpotifyAudioTrack){
-            track = convertSpotifyTrack(track);
+            track = audioTrackConverter.convertSpotifyTrack(track);
         }
-        List<AudioTrack> tracksToPreload = queue.stream()
-                .filter(t -> t instanceof SpotifyAudioTrack && !preloadQueue.contains(t))
-                .limit(3)
-                .collect(Collectors.toList());
-        preloadQueue.addAll(tracksToPreload);
-
-        new Thread(){
-            public void run(){
-                preloadSpotifyTracks();
-            }
-        }.start();
 
         this.player.playTrack(track);
     }
@@ -117,32 +111,4 @@ public class TrackScheduler extends AudioEventListener {
     public void onTrackException(IPlayer player, AudioTrack track, Exception exception) {
         log.info(exception.getMessage());
     }
-
-    synchronized private void preloadSpotifyTracks(){
-        for (int i = 0; i < preloadQueue.size(); i++) {
-            AudioTrack spotifyTrack = preloadQueue.poll();
-            AudioTrack converted = convertSpotifyTrack(spotifyTrack);
-            for (int y = 0; y < queue.size(); y++) {
-                if (spotifyTrack == queue.get(y)){
-                    queue.set(y, converted);
-                    break;
-                }
-            }
-        }
-    }
-
-    private AudioTrack convertSpotifyTrack(AudioTrack track){
-        try {
-            List<AudioTrack> searchPlaylist = PlayerManager.getInstance().getMusicManager(guild).link.getRestClient().getYoutubeSearchResult(track.getInfo().title).get();
-            AudioTrack ytTrack = searchPlaylist.get(0);
-            log.info("Converting: " + ytTrack.getInfo().title);
-            ytTrack.setUserData(track.getUserData());
-            return ytTrack;
-        }catch(Exception e){
-
-        }
-        return null;
-    }
-
-
 }
