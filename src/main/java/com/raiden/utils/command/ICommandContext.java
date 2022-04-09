@@ -1,4 +1,4 @@
-package com.raiden.commands.utils;
+package com.raiden.utils.command;
 
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.JDA;

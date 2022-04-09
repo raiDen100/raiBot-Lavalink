@@ -1,4 +1,4 @@
-package com.raiden.commands.utils;
+package com.raiden.utils.command;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.raiden.commands.music.filters;
 
-import com.raiden.commands.utils.CommandContext;
-import com.raiden.commands.utils.ICommand;
+import com.raiden.utils.command.CommandContext;
+import com.raiden.utils.command.ICommand;
 import com.raiden.utils.messages.EmbedCreator;
 import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;

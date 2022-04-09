@@ -1,6 +1,6 @@
 package com.raiden;
 
-import com.raiden.commands.utils.CommandManager;
+import com.raiden.utils.command.CommandManager;
 import com.raiden.utils.Config;
 import com.raiden.utils.LavalinkHandler;
 import lavalink.client.io.jda.JdaLavalink;

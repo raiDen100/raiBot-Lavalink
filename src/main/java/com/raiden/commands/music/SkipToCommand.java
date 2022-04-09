@@ -1,7 +1,7 @@
 package com.raiden.commands.music;
 
-import com.raiden.commands.utils.CommandContext;
-import com.raiden.commands.utils.ICommand;
+import com.raiden.utils.command.CommandContext;
+import com.raiden.utils.command.ICommand;
 import com.raiden.utils.messages.EmbedCreator;
 import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
@@ -9,7 +9,6 @@ import com.raiden.utils.player.VoiceChecks;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.IPlayer;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 

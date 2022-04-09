@@ -1,21 +1,16 @@
 package com.raiden.commands.music;
 
-import com.raiden.commands.utils.CommandContext;
-import com.raiden.commands.utils.IButtonCommand;
-import com.raiden.commands.utils.ICommand;
-import com.raiden.commands.utils.exceptions.VoiceChannelNullException;
+import com.raiden.utils.command.CommandContext;
+import com.raiden.utils.command.IButtonCommand;
 import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
 import com.raiden.utils.player.VoiceChecks;
 import lavalink.client.io.jda.JdaLink;
-import lavalink.client.player.IPlayer;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ClearCommand implements IButtonCommand {
     @Override

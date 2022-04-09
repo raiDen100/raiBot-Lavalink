@@ -1,7 +1,7 @@
 package com.raiden.commands;
 
-import com.raiden.commands.utils.CommandContext;
-import com.raiden.commands.utils.ICommand;
+import com.raiden.utils.command.CommandContext;
+import com.raiden.utils.command.ICommand;
 
 import java.util.List;
 

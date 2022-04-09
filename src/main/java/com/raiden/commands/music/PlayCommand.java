@@ -1,24 +1,19 @@
 package com.raiden.commands.music;
 
-import com.raiden.commands.utils.*;
-import com.raiden.commands.utils.exceptions.VoiceChannelNullException;
+import com.raiden.utils.command.CommandContext;
+import com.raiden.utils.command.ICommand;
+import com.raiden.utils.command.exceptions.VoiceChannelNullException;
 import com.raiden.utils.messages.EmbedCreator;
 import com.raiden.utils.player.*;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import lavalink.client.io.jda.JdaLink;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
-import se.michaelthelin.spotify.model_objects.specification.Track;
-import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

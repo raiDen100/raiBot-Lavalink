@@ -1,4 +1,4 @@
-package com.raiden.commands.utils.exceptions;
+package com.raiden.utils.command.exceptions;
 
 import net.dv8tion.jda.api.entities.TextChannel;
 

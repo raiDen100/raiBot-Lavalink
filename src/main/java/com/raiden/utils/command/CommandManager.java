@@ -1,4 +1,4 @@
-package com.raiden.commands.utils;
+package com.raiden.utils.command;
 
 import com.raiden.commands.PingCommand;
 import com.raiden.commands.music.ResetCommand;
@@ -6,7 +6,7 @@ import com.raiden.commands.music.*;
 import com.raiden.commands.music.filters.BassboostCommand;
 import com.raiden.commands.music.filters.SpeedCommand;
 import com.raiden.commands.music.filters.VolumeCommand;
-import com.raiden.commands.utils.exceptions.CommandNotFoundException;
+import com.raiden.utils.command.exceptions.CommandNotFoundException;
 import com.raiden.utils.Config;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
