@@ -4,6 +4,8 @@ import com.raiden.commands.PingCommand;
 import com.raiden.commands.ResetCommand;
 import com.raiden.commands.music.*;
 import com.raiden.commands.music.filters.BassboostCommand;
+import com.raiden.commands.music.filters.SpeedCommand;
+import com.raiden.commands.music.filters.VolumeCommand;
 import com.raiden.commands.utils.exceptions.CommandNotFoundException;
 import com.raiden.utils.Config;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -27,7 +29,9 @@ public class CommandManager {
             new QueueCommand(),
             new LeaveCommand(),
             new ClearCommand(),
-            new ResetCommand()
+            new ResetCommand(),
+            new VolumeCommand(),
+            new SpeedCommand()
     );
 
     public void handle(GuildMessageReceivedEvent event){

@@ -37,6 +37,15 @@ public class GuildMusicManager {
         filters.commit();
     }
 
+    public void setVolume(float value){
+        filters.setVolume(value);
+        filters.commit();
+    }
+
+    public void resetVolume() {
+        filters.setVolume(1);
+        filters.commit();
+    }
     public void resetBassboost(){
         for (int i = 0; i < BASS_BOOST.length; i++) {
             filters.setBand(i, 0);
@@ -44,11 +53,25 @@ public class GuildMusicManager {
         filters.commit();
     }
 
+    public void resetFilters() {
+        filters.clear();
+        filters.commit();
+    }
+
     public void setChannel(TextChannel channel) {
         messageManager.setChannel(channel);
     }
 
-    public void resetFilters() {
-        resetBassboost();
+
+    public void setSpeed(float speed) {
+        Timescale timescale = new Timescale();
+        timescale.setSpeed(speed);
+        filters.setTimescale(timescale);
+        filters.commit();
+    }
+
+    public void resetSpeed() {
+        filters.setTimescale(null);
+        filters.commit();
     }
 }

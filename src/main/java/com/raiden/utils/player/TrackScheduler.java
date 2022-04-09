@@ -1,15 +1,22 @@
 package com.raiden.utils.player;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raiden.utils.messages.EmbedCreator;
+import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
+import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import com.sedmelluq.discord.lavaplayer.track.DecodedTrackHolder;
 import lavalink.client.player.IPlayer;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;

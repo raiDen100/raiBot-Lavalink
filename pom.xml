@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.github.raiDen100</groupId>
             <artifactId>Lavalink-Client</artifactId>
-            <version>0593188e91</version>
+            <version>bc00a79c97</version>
         </dependency>
         <dependency>
             <groupId>com.github.raiDen100</groupId>
