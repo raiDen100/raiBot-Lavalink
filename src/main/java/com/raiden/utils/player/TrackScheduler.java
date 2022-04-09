@@ -2,6 +2,8 @@ package com.raiden.utils.player;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raiden.utils.messages.EmbedCreator;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -50,6 +52,12 @@ public class TrackScheduler extends AudioEventListener {
             return;
         }
         queue.add(track);
+    }
+
+    public void queueTracks(List<AudioTrack> tracks) {
+        for (AudioTrack t: tracks){
+            queueTrack(t);
+        }
     }
 
     public void nextTrack(){
@@ -135,4 +143,6 @@ public class TrackScheduler extends AudioEventListener {
         }
         return null;
     }
+
+
 }

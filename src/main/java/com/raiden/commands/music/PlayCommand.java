@@ -4,6 +4,7 @@ import com.raiden.commands.utils.*;
 import com.raiden.commands.utils.exceptions.VoiceChannelNullException;
 import com.raiden.utils.messages.EmbedCreator;
 import com.raiden.utils.player.*;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import lavalink.client.io.jda.JdaLink;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ import java.util.Optional;
 @Slf4j
 public class PlayCommand implements ICommand {
 
-    private final SpotifyService spotifyService = new SpotifyService();
+    private final SpotifyClientWrapper spotifyClientWrapper = new SpotifyClientWrapper();
 
     @Override
     public void handle(CommandContext ctx) {
@@ -32,7 +33,6 @@ public class PlayCommand implements ICommand {
         TextChannel channel = ctx.getChannel();
 
         GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
-
 
         JdaLink link = musicManager.link;
 
@@ -48,57 +48,33 @@ public class PlayCommand implements ICommand {
 
         String track = String.join(" ", ctx.getArgs().subList(1, ctx.getArgs().size())).trim();
 
-        if (!isValid(track) && !isSpotifyUrl(track))
-            track = "ytsearch:" + track;
-
         musicManager.setChannel(channel);
+
         if (isSpotifyUrl(track)){
-            List<String> splitted = Arrays.asList(track.split("/"));
-            Collections.reverse(splitted);
-            String id = splitted.get(0).split("\\?")[0];
-            String type = splitted.get(1);
-            if (type.equals("track")){
-                Track spotifyTrack = spotifyService.getTrackDetailsById(id);
-                track = "ytsearch:" + spotifyTrack.getName() + " " + getTrackArtists(spotifyTrack);
-            }
-            else if (type.equals("playlist")){
-                List<Track> tracks = spotifyService.getPlaylistTracks(id);
-
+            List<AudioTrack> tracks = spotifyClientWrapper.handleSpotifyUrl(track, ctx.getAuthor());
+            if (tracks.size() > 1){
                 MessageEmbed messageEmbed = EmbedCreator.queuedPlaylistEmbed(tracks.size());
                 channel.sendMessageEmbeds(messageEmbed).queue();
-
-                for (Track t : tracks){
-                    SpotifyAudioTrack spotifyAudioTrack = new SpotifyAudioTrack(new AudioTrackInfo(t.getName() + " - " + getTrackArtists(t), getTrackArtists(t),t.getDurationMs(), t.getId(), false, ""));
-                    spotifyAudioTrack.setUserData(ctx.getAuthor());
-                    musicManager.scheduler.queueTrack(spotifyAudioTrack);
-                }
-                return;
             }
-            else if (type.equals("album")){
-                List<TrackSimplified> tracks = spotifyService.getAlbumTracks(id);
-
-                MessageEmbed messageEmbed = EmbedCreator.queuedPlaylistEmbed(tracks.size());
-                channel.sendMessageEmbeds(messageEmbed).queue();
-
-                int i = 0;
-                for (TrackSimplified t : tracks) {
-                    SpotifyAudioTrack spotifyAudioTrack = new SpotifyAudioTrack(new AudioTrackInfo(t.getName() + " - " + getTrackArtists(t), getTrackArtists(t),t.getDurationMs(), t.getId(), false, ""));
-                    spotifyAudioTrack.setUserData(ctx.getAuthor());
-                    musicManager.scheduler.queueTrack(spotifyAudioTrack);
+            else{
+                if (musicManager.audioPlayer.getPlayingTrack() != null){
+                    MessageEmbed messageEmbed = EmbedCreator.queuedTrackEmbed(tracks.get(0), ctx.getAuthor().getIdLong());
+                    channel.sendMessageEmbeds(messageEmbed).queue();
                 }
-                return;
             }
+            musicManager.scheduler.queueTracks(tracks);
+            return;
         }
 
+        if (!isValid(track))
+            track = "ytsearch:" + track;
 
-        musicManager.setChannel(channel);
         PlayerManager.getInstance().loadAndPlay(ctx, track, ctx.getAuthor());
     }
 
     public static boolean isSpotifyUrl(String url){
         if(isValid(url) && url.contains("open.spotify")){
             return true;
-
         }
         return false;
     }
@@ -117,23 +93,7 @@ public class PlayCommand implements ICommand {
         }
     }
 
-    public String getTrackArtists(Track track){
-        ArtistSimplified[] artists = track.getArtists();
-        String result = "";
-        for (int i = 0; i < artists.length && i < 3; i++) {
-            result += artists[i].getName() + " ";
-        }
-        return result.trim();
-    }
 
-    public String getTrackArtists(TrackSimplified track){
-        ArtistSimplified[] artists = track.getArtists();
-        String result = "";
-        for (int i = 0; i < artists.length && i < 3; i++) {
-            result += artists[i].getName() + " ";
-        }
-        return result.trim();
-    }
 
     @Override
     public String getName() {

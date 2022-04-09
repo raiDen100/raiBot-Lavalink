@@ -1,6 +1,7 @@
 package com.raiden.utils.player;
 
 import com.raiden.utils.Config;
+import lombok.extern.slf4j.Slf4j;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
@@ -11,11 +12,12 @@ import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 import java.net.URI;
 import java.util.*;
 
-public class SpotifyService {
+@Slf4j
+public class SpotifyClient {
 
     private SpotifyApi spotifyApi;
 
-    public SpotifyService(){
+    public SpotifyClient(){
         getAccessToken();
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -36,10 +38,11 @@ public class SpotifyService {
             ClientCredentials clientCredentials = spotifyApi.clientCredentials().build().execute();
             spotifyApi.setAccessToken(clientCredentials.getAccessToken());
 
-            System.out.println("Expires in: " + clientCredentials.getExpiresIn());
+            log.info("Received access token");
         }
         catch (Exception e){
-            System.out.println(e);
+            log.info("Getting access token failed");
+            log.info(e.getMessage());
         }
     }
 
@@ -52,9 +55,9 @@ public class SpotifyService {
             System.out.println("Error: " + e.getMessage());
         }
         return null;
-    }//https://open.spotify.com/track/13s6dCsNpSZflwVu2uzzPi?si=cec3953e31a54ec9
+    }
 
-    public List<Track> getPlaylistTracks(String playlistId){
+    public List<Track> getPlaylistTracks(String playlistId) {
         try {
             Paging<PlaylistTrack> playlistsItems = spotifyApi.getPlaylistsItems(playlistId).build().execute();
 
@@ -67,12 +70,11 @@ public class SpotifyService {
                 playlistTracks.add(track);
             });
             return playlistTracks;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
         return null;
-    }//https://open.spotify.com/playlist/1HR1Cq6ZpWplFtRWTPVBRm?si=a033384b2fc64495
+    }
 
     public List<TrackSimplified> getAlbumTracks(String albumId){
         try {
@@ -86,5 +88,5 @@ public class SpotifyService {
 
         }
         return null;
-    }//https://open.spotify.com/album/7fJJK56U9fHixgO0HQkhtI?si=Gz11-NqrRtiGm79bfjmSkg
+    }
 }
