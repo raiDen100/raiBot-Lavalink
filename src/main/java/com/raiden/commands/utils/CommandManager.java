@@ -1,7 +1,7 @@
 package com.raiden.commands.utils;
 
 import com.raiden.commands.PingCommand;
-import com.raiden.commands.ResetCommand;
+import com.raiden.commands.music.ResetCommand;
 import com.raiden.commands.music.*;
 import com.raiden.commands.music.filters.BassboostCommand;
 import com.raiden.commands.music.filters.SpeedCommand;
@@ -31,7 +31,8 @@ public class CommandManager {
             new ClearCommand(),
             new ResetCommand(),
             new VolumeCommand(),
-            new SpeedCommand()
+            new SpeedCommand(),
+            new SkipToCommand()
     );
 
     public void handle(GuildMessageReceivedEvent event){

@@ -1,4 +1,4 @@
-package com.raiden.commands;
+package com.raiden.commands.music;
 
 import com.raiden.commands.utils.CommandContext;
 import com.raiden.commands.utils.ICommand;

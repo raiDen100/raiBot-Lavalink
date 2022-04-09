@@ -71,8 +71,8 @@ public class TrackScheduler extends AudioEventListener {
         if (track instanceof SpotifyAudioTrack){
             track = audioTrackConverter.convertSpotifyTrack(track);
         }
-
         this.player.playTrack(track);
+        audioTrackConverter.convertQueue(queue);
     }
 
     public void shuffleQueue() {

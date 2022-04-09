@@ -19,7 +19,7 @@ public class AudioTrackConverter {
         this.converterThread = new Thread();
     }
 
-    public void convertQueue(List<AudioTrack> queue){
+   public void convertQueue(List<AudioTrack> queue){
         if (!converterThread.isAlive()){
             converterThread = new Thread(() -> convertTracksInQueue(queue));
             converterThread.setName("SpotifyConverter-" + guild.getId());

@@ -1,20 +1,23 @@
 package com.raiden.commands.music;
 
 import com.raiden.commands.utils.CommandContext;
+import com.raiden.commands.utils.IButtonCommand;
 import com.raiden.commands.utils.ICommand;
 import com.raiden.commands.utils.exceptions.VoiceChannelNullException;
 import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
 import com.raiden.utils.player.VoiceChecks;
 import lavalink.client.io.jda.JdaLink;
+import lavalink.client.player.IPlayer;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ClearCommand implements ICommand {
+public class ClearCommand implements IButtonCommand {
     @Override
     public void handle(CommandContext ctx) {
         TextChannel channel = ctx.getChannel();
@@ -35,6 +38,20 @@ public class ClearCommand implements ICommand {
     }
 
     @Override
+    public void handle(ButtonClickEvent event) {
+
+        GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(event.getGuild());
+        Member member = event.getInteraction().getMember();
+
+        if (!VoiceChecks.inChannelWith(musicManager, member))
+            return;
+
+        musicManager.audioPlayer.stopTrack();
+        musicManager.scheduler.queue.clear();
+        musicManager.messageManager.updateButtonsNowPlayingEmbed(event);
+    }
+
+    @Override
     public String getName() {
         return "stop";
     }
@@ -46,6 +63,6 @@ public class ClearCommand implements ICommand {
 
     @Override
     public String getHelp() {
-        return ICommand.super.getHelp();
+        return IButtonCommand.super.getHelp();
     }
 }
