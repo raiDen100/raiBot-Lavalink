@@ -32,7 +32,8 @@ public class CommandManager {
             new ResetCommand(),
             new VolumeCommand(),
             new SpeedCommand(),
-            new SkipToCommand()
+            new SkipToCommand(),
+            new SeekCommand()
     );
 
     public void handle(GuildMessageReceivedEvent event){
