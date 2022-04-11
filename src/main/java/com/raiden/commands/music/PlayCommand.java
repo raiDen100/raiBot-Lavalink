@@ -20,7 +20,7 @@ import java.util.Optional;
 @Slf4j
 public class PlayCommand implements ICommand {
 
-    public static final SpotifyClientWrapper spotifyClientWrapper = new SpotifyClientWrapper();
+    private static final SpotifyClientWrapper spotifyClientWrapper = new SpotifyClientWrapper();
 
     @Override
     public void handle(CommandContext ctx) {
@@ -103,5 +103,9 @@ public class PlayCommand implements ICommand {
     @Override
     public String getHelp() {
         return ICommand.super.getHelp();
+    }
+
+    public static SpotifyClientWrapper getSpotifyClientWrapper(){
+        return spotifyClientWrapper;
     }
 }

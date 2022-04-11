@@ -20,7 +20,7 @@ import java.util.Optional;
 
 public class PlayNowCommand implements ICommand {
 
-    private static final SpotifyClientWrapper spotifyClientWrapper = PlayCommand.spotifyClientWrapper;
+    private static final SpotifyClientWrapper spotifyClientWrapper = PlayCommand.getSpotifyClientWrapper();
 
     @Override
     public void handle(CommandContext ctx) {
