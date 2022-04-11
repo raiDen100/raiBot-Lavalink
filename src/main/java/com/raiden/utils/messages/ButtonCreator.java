@@ -10,13 +10,14 @@ public class ButtonCreator {
     public static List<Button> createNowPlayingButtons(TrackScheduler scheduler){
         List<Button> buttonList = new ArrayList<>();
 
-        buttonList.add(Button.secondary("clear", "Clear"));
+        buttonList.add(Button.secondary("queue", "Queue"));
         buttonList.add(Button.secondary("skip", "Skip"));
-        buttonList.add(Button.secondary("resume", "Play"));
+        buttonList.add(Button.secondary("clear", "Clear"));
+//        buttonList.add(Button.secondary("resume", "Play"));
         if(!scheduler.player.isPaused())
             buttonList.add(Button.secondary("pause", "Pause"));
         else
-            buttonList.add(Button.danger("pause", "Pause"));
+            buttonList.add(Button.danger("resume", "Play"));
 
         if(!scheduler.loop)
             buttonList.add(Button.secondary("loop", "Loop"));
