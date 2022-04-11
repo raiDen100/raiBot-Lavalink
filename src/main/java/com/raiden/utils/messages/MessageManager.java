@@ -45,6 +45,9 @@ public class MessageManager {
     public void updateButtonsQueueButtons(ButtonClickEvent buttonEvent, String messageContent){
         buttonEvent.editMessage(messageContent).queue();
     }
+    public void updateButtonsQueueButtons(ButtonClickEvent buttonEvent){
+        buttonEvent.editMessage(buttonEvent.getMessage()).queue();
+    }
 
     public void updateButtonsNowPlayingEmbed(ButtonClickEvent buttonEvent){
         List<Button> buttons = ButtonCreator.createNowPlayingButtons(scheduler);

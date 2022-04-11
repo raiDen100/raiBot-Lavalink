@@ -87,7 +87,7 @@ public class QueueCommand implements IButtonCommand {
         musicManager.messageManager.updateButtonsQueueButtons(event, getPage(musicManager, musicManager.messageManager.queuePage));
     }
 
-    private String getPage(GuildMusicManager musicManager, int pageNumber){
+    public static String getPage(GuildMusicManager musicManager, int pageNumber){
         List<AudioTrack> fullQueue = getFullQueue(musicManager);
 
         int startIndex = pageNumber * ITEMS_PER_PAGE;
@@ -107,7 +107,7 @@ public class QueueCommand implements IButtonCommand {
         return page;
     }
 
-    private String getPreparedLine(AudioTrack track, int trackNumber){
+    private static String getPreparedLine(AudioTrack track, int trackNumber){
 
         long durationInSeconds = track.getInfo().length / 1000;
 
@@ -129,7 +129,7 @@ public class QueueCommand implements IButtonCommand {
         return trackNumberString + line.toString();
     }
 
-    private String getDurationString(long duration){
+    private static String getDurationString(long duration){
         long minutes = duration / 60;
         long seconds = duration % 60;
 
@@ -147,7 +147,7 @@ public class QueueCommand implements IButtonCommand {
 
 
 
-    private List<AudioTrack> getFullQueue(GuildMusicManager musicManager){
+    private static List<AudioTrack> getFullQueue(GuildMusicManager musicManager){
         List<AudioTrack> queueTracks = new ArrayList<>();
         queueTracks.addAll(musicManager.scheduler.queue);
         queueTracks.add(0, musicManager.audioPlayer.getPlayingTrack());

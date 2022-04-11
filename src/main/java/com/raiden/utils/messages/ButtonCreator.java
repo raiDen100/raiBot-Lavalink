@@ -33,6 +33,7 @@ public class ButtonCreator {
         buttonList.add(Button.secondary("queue previous", "Previous"));
         buttonList.add(Button.secondary("queue next", "Next"));
         buttonList.add(Button.secondary("queue last", "Last"));
+        buttonList.add(Button.secondary("shuffle", "Shuffle"));
 
         return buttonList;
     }
