@@ -1,6 +1,5 @@
 package com.raiden.utils.command;
 
-import com.raiden.commands.PingCommand;
 import com.raiden.commands.music.ResetCommand;
 import com.raiden.commands.music.*;
 import com.raiden.commands.music.filters.BassboostCommand;
@@ -17,7 +16,6 @@ import java.util.List;
 public class CommandManager {
 
     private final List<ICommand> commands = List.of(
-            new PingCommand(),
             new PlayCommand(),
             new SkipCommand(),
             new LoopCommand(),
