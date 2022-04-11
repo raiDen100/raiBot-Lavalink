@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 public class TrackScheduler extends AudioEventListener {
 
     public List<AudioTrack> queue = new ArrayList<>();
-    private BlockingQueue<AudioTrack> preloadQueue = new LinkedBlockingQueue<>();
     public IPlayer player;
     private final Guild guild;
 
@@ -63,6 +62,12 @@ public class TrackScheduler extends AudioEventListener {
             queueTrack(t);
         }
         audioTrackConverter.convertQueue(queue);
+    }
+
+    public void insertTrack(int index, AudioTrack track, boolean skipCurrent){
+        queue.add(index, track);
+        if (skipCurrent)
+            nextTrack();
     }
 
     public void nextTrack(){

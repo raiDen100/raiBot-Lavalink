@@ -33,7 +33,8 @@ public class CommandManager {
             new VolumeCommand(),
             new SpeedCommand(),
             new SkipToCommand(),
-            new SeekCommand()
+            new SeekCommand(),
+            new PlayNowCommand()
     );
 
     public void handle(GuildMessageReceivedEvent event){

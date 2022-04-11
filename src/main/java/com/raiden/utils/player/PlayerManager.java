@@ -28,6 +28,11 @@ public class PlayerManager extends DefaultAudioPlayerManager {
         audioPlayerManager.loadItem(trackUrl, new DefaultAudioResultHandler(author, musicManager));
     }
 
+    public void loadAndPlayNow(CommandContext ctx, String track, User author) {
+        GuildMusicManager musicManager = getMusicManager(ctx.getGuild());
+        audioPlayerManager.loadItem(track, new PlayNowResultHandler(author, musicManager));
+    }
+
     public GuildMusicManager getMusicManager(Guild guild){
         if (!musicManagers.containsKey(guild.getIdLong())){
             musicManagers.put(guild.getIdLong(), new GuildMusicManager(LavalinkHandler.getLavalink().getLink(guild)));
@@ -41,5 +46,6 @@ public class PlayerManager extends DefaultAudioPlayerManager {
         }
         return INSTANCE;
     }
+
 
 }

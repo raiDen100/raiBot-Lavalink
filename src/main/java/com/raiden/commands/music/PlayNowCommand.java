@@ -4,27 +4,26 @@ import com.raiden.utils.command.CommandContext;
 import com.raiden.utils.command.ICommand;
 import com.raiden.utils.command.exceptions.VoiceChannelNullException;
 import com.raiden.utils.messages.EmbedCreator;
-import com.raiden.utils.player.*;
+import com.raiden.utils.player.GuildMusicManager;
+import com.raiden.utils.player.PlayerManager;
+import com.raiden.utils.player.SpotifyClientWrapper;
+import com.raiden.utils.player.VoiceChecks;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.io.jda.JdaLink;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
-public class PlayCommand implements ICommand {
+public class PlayNowCommand implements ICommand {
 
-    public static final SpotifyClientWrapper spotifyClientWrapper = new SpotifyClientWrapper();
+    private static final SpotifyClientWrapper spotifyClientWrapper = PlayCommand.spotifyClientWrapper;
 
     @Override
     public void handle(CommandContext ctx) {
-
         TextChannel channel = ctx.getChannel();
 
         GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
@@ -37,67 +36,33 @@ public class PlayCommand implements ICommand {
                     throw new VoiceChannelNullException(channel);
                 });
 
-        if(!link.getPlayer().isConnected() || !VoiceChecks.inChannelWith(musicManager, member)){
+        if (!link.getPlayer().isConnected() || !VoiceChecks.inChannelWith(musicManager, member)) {
             link.connect(memberVoiceChannel);
         }
 
         String track = String.join(" ", ctx.getArgs().subList(1, ctx.getArgs().size())).trim();
 
-        musicManager.setChannel(channel);
-
-        if (isSpotifyUrl(track)){
+        if (PlayCommand.isSpotifyUrl(track)) {
             List<AudioTrack> tracks = spotifyClientWrapper.handleSpotifyUrl(track, ctx.getAuthor());
-            if (tracks.size() > 1){
-                MessageEmbed messageEmbed = EmbedCreator.queuedPlaylistEmbed(tracks.size());
-                channel.sendMessageEmbeds(messageEmbed).queue();
-            }
-            else{
-                if (musicManager.audioPlayer.getPlayingTrack() != null){
-                    MessageEmbed messageEmbed = EmbedCreator.queuedTrackEmbed(tracks.get(0), ctx.getAuthor().getIdLong());
-                    channel.sendMessageEmbeds(messageEmbed).queue();
-                }
-            }
-            musicManager.scheduler.queueTracks(tracks);
+            musicManager.scheduler.insertTrack(0, tracks.get(0), true);
             return;
         }
 
-        if (!isValid(track))
+        if (!PlayCommand.isValid(track))
             track = "ytsearch:" + track;
 
-        PlayerManager.getInstance().loadAndPlay(ctx, track, ctx.getAuthor());
+
+        PlayerManager.getInstance().loadAndPlayNow(ctx, track, ctx.getAuthor());
     }
-
-    public static boolean isSpotifyUrl(String url){
-        if(isValid(url) && url.contains("open.spotify")){
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isValid(String url)
-    {
-        try {
-            new URL(url).toURI();
-            return true;
-        }
-
-        // If there was an Exception
-        // while creating URL object
-        catch (Exception e) {
-            return false;
-        }
-    }
-
-
 
     @Override
     public String getName() {
-        return "play";
+        return "playnow";
     }
 
     @Override
     public List<String> getAliases() {
-        return List.of("p");
+        return List.of("pn");
     }
 
     @Override
