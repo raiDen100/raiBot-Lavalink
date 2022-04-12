@@ -5,6 +5,8 @@ import com.raiden.utils.LavalinkHandler;
 import lavalink.client.io.jda.JdaLavalink;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
@@ -15,7 +17,7 @@ import java.net.URISyntaxException;
 public class Bot {
     private static ShardManager shardManager;
 
-    public static void main(String[] args) throws LoginException, URISyntaxException {
+    public static void main(String[] args) throws LoginException {
 
         System.setProperty("active.profile", "development");
         if (args.length > 0){
@@ -31,6 +33,7 @@ public class Bot {
         shardManager = DefaultShardManagerBuilder.createDefault(Config.getToken())
                 .addEventListeners(new Listener(), lavalink)
                 .setVoiceDispatchInterceptor(lavalink.getVoiceInterceptor())
+                .setActivity(Activity.listening(Emoji.fromUnicode("🎵").getName()))
                 .build();
 
     }

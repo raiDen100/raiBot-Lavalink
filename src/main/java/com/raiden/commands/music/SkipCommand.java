@@ -2,12 +2,17 @@ package com.raiden.commands.music;
 
 import com.raiden.utils.command.CommandContext;
 import com.raiden.utils.command.IButtonCommand;
+import com.raiden.utils.messages.EmbedCreator;
 import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
 import com.raiden.utils.player.VoiceChecks;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.IPlayer;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 
@@ -33,12 +38,13 @@ public class SkipCommand implements IButtonCommand {
             return;
         }
 
+        sendCounterEmbed(musicManager, audioPlayer, channel);
+
         log.info("Skipping: " + audioPlayer.getPlayingTrack().getInfo().title);
         musicManager.scheduler.nextTrack();
     }
 
     public void handle(ButtonClickEvent event){
-        log.info("Skip button clicked!");
 
         GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(event.getGuild());
         IPlayer audioPlayer = musicManager.audioPlayer;
@@ -53,9 +59,20 @@ public class SkipCommand implements IButtonCommand {
             return;
         }
 
+        sendCounterEmbed(musicManager, audioPlayer, event.getMessage().getTextChannel());
+
         log.info("Skipping: " + audioPlayer.getPlayingTrack().getInfo().title);
         musicManager.scheduler.nextTrack();
 
+    }
+
+    public static void sendCounterEmbed(GuildMusicManager musicManager, IPlayer audioPlayer, TextChannel channel){
+        if (musicManager.scheduler.getLoopCounter() != 0){
+            AudioTrack currentlyPlaying = audioPlayer.getPlayingTrack();
+            MessageEmbed messageEmbed = EmbedCreator.actionSuccessfulEmbed("Played **" + currentlyPlaying.getInfo().title + "** " + musicManager.scheduler.getLoopCounter() + " times before");
+            channel.sendMessageEmbeds(messageEmbed).queue();
+            log.info("Sent embed");
+        }
     }
 
 

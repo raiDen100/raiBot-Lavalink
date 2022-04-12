@@ -32,7 +32,8 @@ public class CommandManager {
             new SpeedCommand(),
             new SkipToCommand(),
             new SeekCommand(),
-            new PlayNowCommand()
+            new PlayNowCommand(),
+            new CounterCommand()
     );
 
     public void handle(GuildMessageReceivedEvent event){
@@ -44,8 +45,9 @@ public class CommandManager {
 
         List<String> args = Arrays.asList(split);
 
+        String commandName = args.get(0);
         ICommand command = commands.stream()
-                .filter(iCommand -> iCommand.getName().equals(args.get(0)) || iCommand.getAliases().contains(args.get(0)))
+                .filter(iCommand -> iCommand.getName().equals(commandName) || iCommand.getAliases().contains(commandName))
                 .findFirst()
                 .orElseThrow(CommandNotFoundException::new);
 
@@ -61,12 +63,14 @@ public class CommandManager {
 
         List<String> args = Arrays.asList(split);
 
+        String commandName = args.get(0);
         ICommand command = commands.stream()
-                .filter(iCommand -> iCommand.getName().equals(args.get(0)) || iCommand.getAliases().contains(args.get(0)))
+                .filter(iCommand ->
+                        (iCommand.getName().equals(commandName) || iCommand.getAliases().contains(commandName)) && iCommand instanceof IButtonCommand
+                )
                 .findFirst()
                 .orElseThrow(CommandNotFoundException::new);
 
-        if (command instanceof IButtonCommand)
-            ((IButtonCommand) command).handle(event);
+        ((IButtonCommand) command).handle(event);
     }
 }

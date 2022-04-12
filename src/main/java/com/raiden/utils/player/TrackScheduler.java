@@ -36,6 +36,12 @@ public class TrackScheduler extends AudioEventListener {
     public boolean loop = false;
     public boolean loopQueue = false;
 
+    private long loopCounter = 0;
+
+    public long getLoopCounter() {
+        return loopCounter;
+    }
+
     private final AudioTrackConverter audioTrackConverter;
 
 
@@ -73,6 +79,8 @@ public class TrackScheduler extends AudioEventListener {
     public void nextTrack(){
         AudioTrack track = this.queue.get(0);
         queue.remove(0);
+        loopCounter = 0;
+
         if (track instanceof SpotifyAudioTrack){
             track = audioTrackConverter.convertSpotifyTrack(track);
         }
@@ -96,6 +104,7 @@ public class TrackScheduler extends AudioEventListener {
         PlayerManager.getInstance().getMusicManager(guild).messageManager.removeLastPlayingMessage();
         if (endReason.mayStartNext){
             if (loop){
+                loopCounter++;
                 player.playTrack(track.makeClone());
                 return;
             }

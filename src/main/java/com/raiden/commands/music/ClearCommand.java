@@ -26,6 +26,8 @@ public class ClearCommand implements IButtonCommand {
         if(!link.getPlayer().isConnected() || !VoiceChecks.inChannelWith(musicManager, member))
             return;
 
+        SkipCommand.sendCounterEmbed(musicManager, musicManager.audioPlayer, channel);
+
         musicManager.audioPlayer.stopTrack();
         musicManager.scheduler.queue.clear();
 
@@ -40,6 +42,8 @@ public class ClearCommand implements IButtonCommand {
 
         if (!VoiceChecks.inChannelWith(musicManager, member))
             return;
+
+        SkipCommand.sendCounterEmbed(musicManager, musicManager.audioPlayer, event.getMessage().getTextChannel());
 
         musicManager.audioPlayer.stopTrack();
         musicManager.scheduler.queue.clear();

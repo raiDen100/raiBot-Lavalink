@@ -2,44 +2,34 @@ package com.raiden.commands.music;
 
 import com.raiden.utils.command.CommandContext;
 import com.raiden.utils.command.ICommand;
+import com.raiden.utils.messages.EmbedCreator;
 import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
-import com.raiden.utils.player.VoiceChecks;
-import lavalink.client.io.jda.JdaLink;
-import net.dv8tion.jda.api.entities.Member;
+import lavalink.client.player.IPlayer;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
 
-public class LeaveCommand implements ICommand {
+public class CounterCommand implements ICommand {
     @Override
     public void handle(CommandContext ctx) {
         TextChannel channel = ctx.getChannel();
 
         GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
+        IPlayer audioPlayer = musicManager.audioPlayer;
 
-        JdaLink link = musicManager.link;
-
-        Member member = ctx.getMember();
-
-        if(!link.getPlayer().isConnected() || !VoiceChecks.inChannelWith(musicManager, member))
+        if (audioPlayer.getPlayingTrack() == null)
             return;
 
-        SkipCommand.sendCounterEmbed(musicManager, musicManager.audioPlayer, channel);
-
-        link.disconnect();
-        link.getPlayer().stopTrack();
-        musicManager.scheduler.loopQueue = false;
-        musicManager.scheduler.loop = false;
-        musicManager.scheduler.queue.clear();
-        musicManager.resetFilters();
-
-        ctx.getMessage().addReaction("👋").queue();
+        MessageEmbed messageEmbed = EmbedCreator.actionSuccessfulEmbed("Played this song " + musicManager.scheduler.getLoopCounter() + " times before");
+        channel.sendMessageEmbeds(messageEmbed).queue();
     }
 
     @Override
     public String getName() {
-        return "leave";
+        return "counter";
     }
 
     @Override

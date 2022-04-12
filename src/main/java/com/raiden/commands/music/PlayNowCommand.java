@@ -52,6 +52,8 @@ public class PlayNowCommand implements ICommand {
             track = "ytsearch:" + track;
 
 
+        SkipCommand.sendCounterEmbed(musicManager, musicManager.audioPlayer, channel);
+
         PlayerManager.getInstance().loadAndPlayNow(ctx, track, ctx.getAuthor());
     }
 
