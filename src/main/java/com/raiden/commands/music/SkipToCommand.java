@@ -49,9 +49,6 @@ public class SkipToCommand implements ICommand {
         List<AudioTrack> newQueue = musicManager.scheduler.queue.subList(skipToIndex-1, musicManager.scheduler.queue.size());
         musicManager.scheduler.queue = newQueue;
         musicManager.scheduler.nextTrack();
-
-        MessageEmbed messageEmbed = EmbedCreator.actionSuccessfulEmbed("Skipped to " + (skipToIndex+1));
-        channel.sendMessageEmbeds(messageEmbed).queue();
     }
 
     @Override
