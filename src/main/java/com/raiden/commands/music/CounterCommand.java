@@ -5,6 +5,7 @@ import com.raiden.utils.command.ICommand;
 import com.raiden.utils.messages.EmbedCreator;
 import com.raiden.utils.player.GuildMusicManager;
 import com.raiden.utils.player.PlayerManager;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.IPlayer;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -23,7 +24,8 @@ public class CounterCommand implements ICommand {
         if (audioPlayer.getPlayingTrack() == null)
             return;
 
-        MessageEmbed messageEmbed = EmbedCreator.actionSuccessfulEmbed("Played this song " + musicManager.scheduler.getLoopCounter() + " times before");
+        AudioTrack currentlyPlaying = audioPlayer.getPlayingTrack();
+        MessageEmbed messageEmbed = EmbedCreator.actionSuccessfulEmbed("Played **" + currentlyPlaying.getInfo().title + "** " + musicManager.scheduler.getLoopCounter() + " times before");
         channel.sendMessageEmbeds(messageEmbed).queue();
     }
 
