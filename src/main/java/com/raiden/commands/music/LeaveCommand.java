@@ -27,8 +27,7 @@ public class LeaveCommand implements ICommand {
 
         SkipCommand.sendCounterEmbed(musicManager, musicManager.audioPlayer, channel);
 
-        link.disconnect();
-        link.getPlayer().stopTrack();
+        link.destroy();
         musicManager.scheduler.loopQueue = false;
         musicManager.scheduler.loop = false;
         musicManager.scheduler.queue.clear();
