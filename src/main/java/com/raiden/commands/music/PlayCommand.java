@@ -20,8 +20,6 @@ import java.util.Optional;
 @Slf4j
 public class PlayCommand implements ICommand {
 
-    private static final SpotifyClientWrapper spotifyClientWrapper = new SpotifyClientWrapper();
-
     @Override
     public void handle(CommandContext ctx) {
 
@@ -46,7 +44,7 @@ public class PlayCommand implements ICommand {
         musicManager.setChannel(channel);
 
         if (isSpotifyUrl(track)){
-            List<AudioTrack> tracks = spotifyClientWrapper.handleSpotifyUrl(track, ctx.getAuthor());
+            List<AudioTrack> tracks = SpotifyClientWrapper.handleSpotifyUrl(track, ctx.getAuthor());
             if (tracks.size() > 1){
                 MessageEmbed messageEmbed = EmbedCreator.queuedPlaylistEmbed(tracks.size());
                 channel.sendMessageEmbeds(messageEmbed).queue();
@@ -103,9 +101,5 @@ public class PlayCommand implements ICommand {
     @Override
     public String getHelp() {
         return ICommand.super.getHelp();
-    }
-
-    public static SpotifyClientWrapper getSpotifyClientWrapper(){
-        return spotifyClientWrapper;
     }
 }

@@ -20,7 +20,6 @@ import java.util.Optional;
 
 public class PlayNowCommand implements ICommand {
 
-    private static final SpotifyClientWrapper spotifyClientWrapper = PlayCommand.getSpotifyClientWrapper();
 
     @Override
     public void handle(CommandContext ctx) {
@@ -43,7 +42,7 @@ public class PlayNowCommand implements ICommand {
         String track = String.join(" ", ctx.getArgs().subList(1, ctx.getArgs().size())).trim();
 
         if (PlayCommand.isSpotifyUrl(track)) {
-            List<AudioTrack> tracks = spotifyClientWrapper.handleSpotifyUrl(track, ctx.getAuthor());
+            List<AudioTrack> tracks = SpotifyClientWrapper.handleSpotifyUrl(track, ctx.getAuthor());
             musicManager.scheduler.insertTrack(0, tracks.get(0), true);
             return;
         }
