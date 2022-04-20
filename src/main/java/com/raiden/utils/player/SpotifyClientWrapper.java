@@ -19,13 +19,9 @@ import java.util.List;
 @Slf4j
 public class SpotifyClientWrapper {
 
-    private final SpotifyClient spotifyClient;
+    private static SpotifyClient spotifyClient = new SpotifyClient();
 
-    public SpotifyClientWrapper(){
-        spotifyClient = new SpotifyClient();
-    }
-
-    public List<AudioTrack> handleSpotifyUrl(String url, User author){
+    public static List<AudioTrack> handleSpotifyUrl(String url, User author){
         List<String> splitted = Arrays.asList(url.split("/"));
         Collections.reverse(splitted);
         String id = splitted.get(0).split("\\?")[0];
@@ -35,11 +31,12 @@ public class SpotifyClientWrapper {
             case "track":    return List.of(getTrack(id, author));
             case "playlist": return getPlaylist(id, author);
             case "album":    return getAlbum(id, author);
+            case "artist":   return getArtistTracks(id, author);
         }
         return List.of();
     }
 
-    public AudioTrack getTrack(String id, User author){
+    public static AudioTrack getTrack(String id, User author){
         Track t = spotifyClient.getTrackDetailsById(id);
         SpotifyAudioTrack spotifyAudioTrack = new SpotifyAudioTrack(new AudioTrackInfo(t.getName() + " - " + getTrackArtists(t), getTrackArtists(t),t.getDurationMs(), t.getId(), false, t.getExternalUrls().get("spotify")));
         spotifyAudioTrack.setUserData(author);
@@ -47,7 +44,7 @@ public class SpotifyClientWrapper {
     }
 
 
-    public List<AudioTrack> getPlaylist(String id, User author){
+    public static List<AudioTrack> getPlaylist(String id, User author){
         List<Track> spotifyTracks = spotifyClient.getPlaylistTracks(id);
 
         List<AudioTrack> tracks = new ArrayList<>();
@@ -59,7 +56,7 @@ public class SpotifyClientWrapper {
         return tracks;
     }
 
-    public List<AudioTrack> getAlbum(String id, User author){
+    public static List<AudioTrack> getAlbum(String id, User author){
         List<TrackSimplified> spotifyTracks = spotifyClient.getAlbumTracks(id);
 
         List<AudioTrack> tracks = new ArrayList<>();
@@ -71,7 +68,20 @@ public class SpotifyClientWrapper {
         return tracks;
     }
 
-    private String getTrackArtists(Track track){
+    public static List<AudioTrack> getArtistTracks(String id, User author){
+        List<Track> spotifyTracks = spotifyClient.getArtistTracks(id);
+
+        List<AudioTrack> tracks = new ArrayList<>();
+        for (Track t : spotifyTracks){
+            SpotifyAudioTrack spotifyAudioTrack = new SpotifyAudioTrack(new AudioTrackInfo(t.getName() + " - " + getTrackArtists(t), getTrackArtists(t),t.getDurationMs(), t.getId(), false, ""));
+            spotifyAudioTrack.setUserData(author);
+            tracks.add(spotifyAudioTrack);
+        }
+        return tracks;
+    }
+
+
+    private static String getTrackArtists(Track track){
         ArtistSimplified[] artists = track.getArtists();
         String result = "";
         for (int i = 0; i < artists.length && i < 3; i++) {
@@ -80,7 +90,7 @@ public class SpotifyClientWrapper {
         return result.trim();
     }
 
-    private String getTrackArtists(TrackSimplified track){
+    private static String getTrackArtists(TrackSimplified track){
         ArtistSimplified[] artists = track.getArtists();
         String result = "";
         for (int i = 0; i < artists.length && i < 3; i++) {
