@@ -1,5 +1,6 @@
 package com.raiden.utils.player;
 
+import com.neovisionaries.i18n.CountryCode;
 import com.raiden.utils.Config;
 import lombok.extern.slf4j.Slf4j;
 import se.michaelthelin.spotify.SpotifyApi;
@@ -82,6 +83,19 @@ public class SpotifyClient {
 
             List<TrackSimplified> tracks = new ArrayList<>();
             tracks.addAll(Arrays.asList(albumTracks.getItems()));
+            return tracks;
+        }
+        catch (Exception e){
+
+        }
+        return null;
+    }
+
+    public List<Track> getArtistTracks(String artistId){
+        try {
+            Track[] artistTracks = spotifyApi.getArtistsTopTracks(artistId, CountryCode.PL).build().execute();
+
+            List<Track> tracks = Arrays.asList(artistTracks);
             return tracks;
         }
         catch (Exception e){
