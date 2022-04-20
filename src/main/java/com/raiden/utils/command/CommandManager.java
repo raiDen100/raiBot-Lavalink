@@ -33,7 +33,8 @@ public class CommandManager {
             new SkipToCommand(),
             new SeekCommand(),
             new PlayNowCommand(),
-            new CounterCommand()
+            new CounterCommand(),
+            new JoinCommand()
     );
 
     public void handle(GuildMessageReceivedEvent event){
