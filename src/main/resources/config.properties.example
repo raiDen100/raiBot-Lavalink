@@ -1,5 +1,11 @@
 bot.token=
 bot.prefix=r-
 
-youtube.papisid=
-youtube.psid=
+node.address=
+node.password=
+node2.address=
+node2.password=
+
+spotify.client.id=
+spotify.client.secret=
+spotify.redirect=
